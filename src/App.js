@@ -3,6 +3,7 @@ import { useState } from "react";
 import UserContext from "./contexts/Context";
 import LoginPage from "../src/components/LoginPage";
 import RegistrationPage from "./components/RegistrationPage";
+import HomePage from "./components/HomePage";
 export default function App() {
   const [user, setUser] = useState({});
   const contextValue = { user, setUser };
@@ -12,8 +13,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/cadastro" element={<RegistrationPage />} />
-          {/* 
-              <Route path="/home" element={< />} />
+          <Route path="/home" element={<HomePage />} />
+          {/*
               <Route path="/nova-entrada" element={< />} />
               <Route path="/nova-saida" element={< />} /> */}
         </Routes>
