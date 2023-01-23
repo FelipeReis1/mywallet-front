@@ -57,7 +57,7 @@ export default function HomePage() {
                 >
                   <h1>{r.date}</h1>
                   <h2>{r.description}</h2>
-                  <h3>{r.value}</h3>
+                  <h3>{Number(r.value).toFixed(2)}</h3>
                 </StyledRevenue>
               );
             })}
