@@ -1,10 +1,39 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import UserContext from "../contexts/Context";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
 
 export default function HomePage() {
   const { user } = useContext(UserContext);
+  const [revenues, setRevenues] = useState([]);
+  let balance = 0;
+  revenues.map((r) => {
+    let type = r.type;
+    if (type === "income") {
+      let aux = Number(r.value);
+      balance += aux;
+    } else {
+      let aux = Number(r.value);
+      balance -= aux;
+    }
+    return balance;
+  });
+  useEffect(() => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+    const promise = axios.get("http://localhost:5000/revenues", config);
+    promise.then((res) => {
+      setRevenues([...res.data]);
+    });
+    promise.catch((err) => {
+      alert(err.response.data);
+    });
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <StyledContainer>
@@ -14,12 +43,38 @@ export default function HomePage() {
           <ion-icon name="exit-outline" />
         </Link>
       </StyledHello>
-      <StyledRevenueContainer>
-        <p>
-          Não há registros de
-          <br /> entrada ou saída
-        </p>
-      </StyledRevenueContainer>
+      <StyledShowRevenueContainer>
+        {revenues.length > 0 ? (
+          <>
+            {revenues.map((r, index) => {
+              return (
+                <StyledRevenue
+                  key={index}
+                  date={r.date}
+                  description={r.description}
+                  amount={r.value}
+                  type={r.type}
+                >
+                  <h1>{r.date}</h1>
+                  <h2>{r.description}</h2>
+                  <h3>{r.value}</h3>
+                </StyledRevenue>
+              );
+            })}
+            <StyledBalance balance={balance}>
+              <h1>SALDO</h1>
+              <h2>{balance.toFixed(2)}</h2>
+            </StyledBalance>
+          </>
+        ) : (
+          <StyledRevenueContainer>
+            <p>
+              Não há registros de
+              <br /> entrada ou saída
+            </p>
+          </StyledRevenueContainer>
+        )}
+      </StyledShowRevenueContainer>
       <StyledButtons>
         <Link to="/nova-entrada" style={{ textDecoration: "none" }}>
           <StyledButton>
@@ -78,7 +133,7 @@ const StyledHello = styled.div`
 `;
 
 const StyledRevenueContainer = styled.div`
-  width: 90%;
+  width: 100%;
   height: 446px;
   background-color: #ffffff;
   border-radius: 5px;
@@ -129,5 +184,75 @@ const StyledButton = styled.button`
     color: #ffffff;
     width: 40px;
     margin-left: 4px;
+  }
+`;
+const StyledShowRevenueContainer = styled.div`
+  width: 90%;
+  height: 446px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  border-style: none;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 13px;
+  position: relative;
+`;
+
+const StyledRevenue = styled.div`
+  display: flex;
+  box-sizing: border-box;
+  padding-left: 10px;
+  padding-top: 5px;
+  h1 {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #c6c6c6;
+  }
+  h2 {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+    margin-left: 5px;
+  }
+  h3 {
+    position: absolute;
+    right: 10px;
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: ${(props) => (props.type === "income" ? "#03AC00" : "#c70000")};
+  }
+`;
+const StyledBalance = styled.div`
+  display: flex;
+  h1 {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 20px;
+    color: #000000;
+  }
+  h2 {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 20px;
+    color: ${(props) => (props.balance > 0 ? "#03AC00" : "#c70000")};
   }
 `;
