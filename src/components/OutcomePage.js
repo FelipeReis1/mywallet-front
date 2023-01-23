@@ -1,13 +1,33 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useContext } from "react";
+import UserContext from "../contexts/Context";
+import axios from "axios";
 
 export default function OutcomePage() {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
-  function home() {
-    navigate("/home");
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
+  function newOutcome(e) {
+    e.preventDefault();
+    if (Number(amount) === isNaN) {
+      return alert("Insira um número válido!");
+    }
+    const body = { value: amount, description, type: "outcome" };
+    const promise = axios.post("http://localhost:5000/revenues", body, config);
+    promise.then(() => {
+      navigate("/home");
+    });
+    promise.catch((err) => {
+      alert(err.response.data);
+    });
   }
 
   return (
@@ -15,7 +35,7 @@ export default function OutcomePage() {
       <StyledTitle>
         <h1>Nova Saída</h1>
       </StyledTitle>
-      <StyledForm onSubmit={""}>
+      <StyledForm onSubmit={newOutcome}>
         <input
           required
           type="text"
@@ -30,9 +50,7 @@ export default function OutcomePage() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <StyledButton type="submit" onClick={home}>
-          Salvar Saída
-        </StyledButton>
+        <StyledButton type="submit">Salvar Saída</StyledButton>
       </StyledForm>
     </StyledContainer>
   );
