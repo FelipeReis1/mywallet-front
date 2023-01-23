@@ -1,27 +1,18 @@
 import { useContext } from "react";
 import UserContext from "../contexts/Context";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export default function HomePage() {
   const { user } = useContext(UserContext);
-  const navigate = useNavigate();
-
-  function exit() {
-    navigate("/");
-  }
-  function newIncome() {
-    navigate("/nova-entrada");
-  }
-  function newOutcome() {
-    navigate("/nova-saida");
-  }
 
   return (
     <StyledContainer>
       <StyledHello>
         <h1>Olá, {user.name}</h1>
-        <ion-icon onClick={exit} name="exit-outline" />
+        <Link to="/" style={{ textDecoration: "none" }}>
+          <ion-icon name="exit-outline" />
+        </Link>
       </StyledHello>
       <StyledRevenueContainer>
         <p>
@@ -30,22 +21,26 @@ export default function HomePage() {
         </p>
       </StyledRevenueContainer>
       <StyledButtons>
-        <StyledButton onClick={newIncome}>
-          <ion-icon name="add-circle-outline" />
-          <p>
-            Nova
-            <br />
-            <span>entrada</span>
-          </p>
-        </StyledButton>
-        <StyledButton onClick={newOutcome}>
-          <ion-icon name="remove-circle-outline" />
-          <p>
-            Nova
-            <br />
-            saída
-          </p>
-        </StyledButton>
+        <Link to="/nova-entrada" style={{ textDecoration: "none" }}>
+          <StyledButton>
+            <ion-icon name="add-circle-outline" />
+            <p>
+              Nova
+              <br />
+              <span>entrada</span>
+            </p>
+          </StyledButton>
+        </Link>
+        <Link to="/nova-saida" style={{ textDecoration: "none" }}>
+          <StyledButton>
+            <ion-icon name="remove-circle-outline" />
+            <p>
+              Nova
+              <br />
+              saída
+            </p>
+          </StyledButton>
+        </Link>
       </StyledButtons>
     </StyledContainer>
   );
