@@ -19,7 +19,10 @@ export default function LoginPage() {
       email: email,
       password: password,
     };
-    const promise = axios.post("http://localhost:5000/sign-in", request);
+    const promise = axios.post(
+      "https://mywalletapi.onrender.com/sign-in",
+      request
+    );
     promise.then((res) => {
       setUser(res.data);
       navigate("/home");

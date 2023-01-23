@@ -22,7 +22,10 @@ export default function RegistrationPage() {
     };
 
     if (password === confirmPassword) {
-      const promise = axios.post("http://localhost:5000/sign-up", request);
+      const promise = axios.post(
+        "https://mywalletapi.onrender.com/sign-up",
+        request
+      );
       promise.then(() => {
         navigate("/");
       });

@@ -25,7 +25,10 @@ export default function HomePage() {
         Authorization: `Bearer ${user.token}`,
       },
     };
-    const promise = axios.get("http://localhost:5000/revenues", config);
+    const promise = axios.get(
+      "https://mywalletapi.onrender.com/revenues",
+      config
+    );
     promise.then((res) => {
       setRevenues([...res.data]);
     });

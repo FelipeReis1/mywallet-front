@@ -21,7 +21,11 @@ export default function OutcomePage() {
       return alert("Insira um número válido!");
     }
     const body = { value: amount, description, type: "outcome" };
-    const promise = axios.post("http://localhost:5000/revenues", body, config);
+    const promise = axios.post(
+      "https://mywalletapi.onrender.com/revenues",
+      body,
+      config
+    );
     promise.then(() => {
       navigate("/home");
     });
