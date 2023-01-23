@@ -18,7 +18,6 @@ export default function RegistrationPage() {
       name: name,
       email: email,
       password: password,
-      confirmPassword: confirmPassword,
     };
 
     if (password === confirmPassword) {
