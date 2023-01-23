@@ -1,13 +1,33 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import UserContext from "../contexts/Context";
 import styled from "styled-components";
+import axios from "axios";
 
 export default function IncomePage() {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
-  function home() {
-    navigate("/home");
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
+  function newIncome(e) {
+    e.preventDefault();
+    if (Number(amount) === isNaN) {
+      return alert("Insira um número válido!");
+    }
+    const body = { value: amount, description, type: "income" };
+    const promise = axios.post("http://localhost:5000/revenues", body, config);
+    promise.then(() => {
+      navigate("/home");
+    });
+    promise.catch((err) => {
+      alert(err.response.data);
+    });
   }
 
   return (
@@ -15,7 +35,7 @@ export default function IncomePage() {
       <StyledTitle>
         <h1>Nova Entrada</h1>
       </StyledTitle>
-      <StyledForm onSubmit={""}>
+      <StyledForm onSubmit={newIncome}>
         <input
           required
           type="text"
@@ -30,9 +50,7 @@ export default function IncomePage() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <StyledButton type="submit" onClick={home}>
-          Salvar Entrada
-        </StyledButton>
+        <StyledButton type="submit">Salvar Entrada</StyledButton>
       </StyledForm>
     </StyledContainer>
   );
